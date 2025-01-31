@@ -109,7 +109,8 @@ This will scan the `uncleaned` directory, update the database with metadata for 
 
 ---
 
-##(Optional Step) In case of the loss of the folder on the VM
+## (Optional Step) In case of the loss of the folder on the VM
+
 ### 8. Create a .env File for Configuration
 Create a `.env` file to store your configuration details. This file should contain the following entries:
 
