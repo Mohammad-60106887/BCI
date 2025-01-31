@@ -7,7 +7,7 @@ This document provides step-by-step instructions for accessing the MongoDB datab
 ## Steps Overview
 
 ### 1. Connect to the University VPN
-Before proceeding, ensure you are connected to the university's VPN using your VPN credentials.
+Before proceeding, ensure you are connected to the university's VPN.
 
 ---
 
@@ -109,5 +109,19 @@ This will scan the `uncleaned` directory, update the database with metadata for 
 
 ---
 
-This document provides all necessary steps in one consolidated flow.
+##(Optional Step) In case of the loss of the folder on the VM
+### 8. Create a .env File for Configuration
+Create a `.env` file to store your configuration details. This file should contain the following entries:
+
+```env
+MONGO_URI=mongodb://localhost:27017/capstoneDB
+VM_IP= #Replace with the IP of the machine that has the files
+VM_USERNAME=  # Replace with your actual username
+VM_PASSWORD=  # Replace with your actual password
+RAW_DIR= #Replace with the DIR of your cleaned files
+UNCLEANED_DIR= #Replace with the DIR of your uncleaned files
+```
+Ensure this file is placed in the root directory of your project and is not publicly accessible.
+
+---
 
