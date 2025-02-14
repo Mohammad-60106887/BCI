@@ -7,7 +7,7 @@ This document provides step-by-step instructions for accessing the MongoDB datab
 ## Steps Overview
 
 ### 1. Connect to the University VPN
-Before proceeding, ensure you are connected to the university's VPN using your VPN credentials.
+Before proceeding, ensure you are connected to the university's VPN.
 
 ---
 
@@ -37,7 +37,7 @@ sudo systemctl status mongod
 
 ---
 
-### 4. Restart MongoDB if Necessary
+### 4. (OPTIONAL) Restart MongoDB if it is not running correctly
 If MongoDB is not running, restart it using the following commands:
 
 ```bash
@@ -49,7 +49,7 @@ sudo systemctl status mongod
 ---
 
 ### 5. Connect to MongoDB from Compass
-Once the SSH tunnel is active and MongoDB is running, you can connect to the database using MongoDB Compass.
+Once the SSH tunnel is active and MongoDB is running, you can connect to the database using MongoDB Compass Application.
 
 Use the following connection string in Compass:
 
@@ -73,7 +73,7 @@ New uncleaned data can be uploaded to the VM's `uncleaned` directory using one o
 ```
 4. Upload your CSV files to the `uncleaned` folder.
 
-#### Option 2: Upload Using SCP (via Command Line)
+#### Option 2: Upload Using SCP (via Windows Command Line)
 You can also upload files directly via SSH using the `scp` command:
 
 ```bash
@@ -91,23 +91,44 @@ To update the metadata for new files in the `uncleaned` directory, follow these 
 2. Navigate to the script's directory:
 
 ```bash
-cd /home/faraz/external_disk/Capstone/meta_script/
+cd /home/faraz/external_disk/Capstone/meta_data_script/
 ```
 3. Run the metadata update script:
 
 ```bash
-python3 meta_script_vm.py
+python3 meta_script.py
 ```
 
 Alternatively, you can run the script from your home directory:
 
 ```bash
-python3 ~/meta_script_vm.py
+python3 ~/meta_script.py
 ```
 
-This will scan the `uncleaned` directory, update the database with metadata for new files, and skip any files that have already been processed.
+This will scan the `uncleaned` & `raw` directories, update the database with metadata for new files, and skip any files that have already been processed.
 
 ---
 
-This document provides all necessary steps in one consolidated flow.
+# (If you're not using "MongoDB Compass" - `Mongosh` commands to view or access the db through command line:
+
+https://www.mongodb.com/docs/mongodb-shell/run-commands/
+
+Check the link or use ChatGPT for `Mongosh` commands that you can use in the command line to access & view the database instead of using "MongoDB Compass"
+
+## (Optional Step) In case of the loss of the `meta_data_script` folder on the VM
+
+### 8. Create a .env File for Configuration
+Create a `.env` file to store your configuration details. This file should contain the following entries:
+
+```env
+MONGO_URI=mongodb://localhost:27017/capstoneDB
+VM_IP= #Replace with the IP of the machine that has the files
+VM_USERNAME=  # Replace with your actual username
+VM_PASSWORD=  # Replace with your actual password
+RAW_DIR= #Replace with the DIR of your cleaned files
+UNCLEANED_DIR= #Replace with the DIR of your uncleaned files
+```
+Ensure this file is placed in the root directory of your project and is not publicly accessible.
+
+---
 
