@@ -27,8 +27,12 @@ Follow these steps to set up and run the project.
 
 ### **1️⃣ Clone the Repository**
 ```sh
-git clone https://github.com/yourusername/bci-project.git
+git clone https://github.com/Mohammad-60106887/BCI.git
 cd bci-project
+```
+Make sure your on ```dev``` branch:
+```sh
+git checkout dev
 ```
 
 ### **2️⃣ Set Up the Backend (FastAPI)**
