@@ -128,3 +128,34 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Python virtual environment
+.venv/
+
+# Ignore installed npm packages
+app/frontend/node_modules/
+
+# Python Bytecode & Cache
+app/backend/__pycache__/
+*.pyc
+*.pyo
+
+# Next.js Build & Cache
+app/frontend/.next/
+app/frontend/out/
+
+# Node.js & Next.js Config Files (Generated)
+app/frontend/package-lock.json  # Lock file should usually be ignored in projects
+app/frontend/yarn.lock
+
+# Tailwind & PostCSS Cache
+app/frontend/tailwind.config.js
+app/frontend/postcss.config.mjs
+
+# ESLint Cache
+app/frontend/.eslintcache
+
+# Miscellaneous Editor/IDE Files
+.vscode/
+.idea/
+.DS_Store  # MacOS metadata files
