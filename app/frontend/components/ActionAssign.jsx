@@ -16,9 +16,8 @@ export default function ActionAssign() {
     };
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-6 mt-6">
-            <h2 className="text-2xl font-bold text-gray-700">Action Assigning</h2>
-
+        <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg border border-gray-100">
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">Action Assignment</h2>
             <label className="block mt-4 text-lg">Target:</label>
             <select 
                 className="w-full p-2 border rounded-md"
