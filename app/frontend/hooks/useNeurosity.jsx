@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+'use client';
+import { useState, useEffect, useRef } from "react";
+import { Neurosity } from "@neurosity/sdk";
 
 export default function useNeurosity(setLogMessages) {
   const [neurosity, setNeurosity] = useState(null);
   const [deviceStatus, setDeviceStatus] = useState({
-    state: "Disconnected",
+    state: "Initializing",
     sleepMode: false,
     charging: false,
     battery: 0,
@@ -13,60 +15,54 @@ export default function useNeurosity(setLogMessages) {
   const [signalQuality, setSignalQuality] = useState(0);
 
   const initNeurosity = async () => {
-    const { Neurosity } = await import("@neurosity/sdk");
-    const deviceId = process.env.NEXT_PUBLIC_DEVICE_ID;
-    console.log("Device ID:", deviceId);
-    const neurosity = new Neurosity({
-      deviceId,
-    });
-    return neurosity;
-  };
-
-  const monitorStatus = (neurosity) => {
-    if (!neurosity) {
-      console.error("Neurosity is not initialized");
-      setLogMessages((prev) => [...prev, "Neurosity is not initialized"]);
-      return;
-    }
-    console.log("Starting status monitor..");
-    setLogMessages((prev) => [...prev, "Starting status monitor.."]);
-    neurosity.status().subscribe((status) => {
-      setDeviceStatus(status);
-    });
-    neurosity.signalQuality().subscribe((signalQuality) => {
-      setSignalQuality(signalQuality);
-    });
-  };
-
-  useEffect(() => {
-    initNeurosity().then((neurosity) => {
-      setNeurosity(neurosity);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!neurosity) {
-      return;
-    }
-
-    neurosity
-      .login({
-        email: process.env.NEXT_PUBLIC_EMAIL,
-        password: process.env.NEXT_PUBLIC_PASSWORD,
-      })
-      .then(() => {
-        console.log("Logged in to Neurosity device");
-        setLogMessages((prev) => [...prev, "Logged in to Neurosity device"]);
-        monitorStatus(neurosity);
-      })
-      .catch((error) => {
-        console.error("Failed to login to Neurosity device:", error);
-        setLogMessages((prev) => [
-          ...prev,
-          `Failed to login to Neurosity device: ${error}`,
-        ]);
+    try {
+      // Fetch credentials from backend
+      const response = await fetch('http://localhost:8000/api/credentials');
+      if (!response.ok) {
+        throw new Error('Failed to fetch credentials');
+      }
+      const { deviceId, email, password } = await response.json();
+      
+      console.log("Initializing with device ID:", deviceId); // Debug log
+      
+      const neurosity = new Neurosity({
+        deviceId,
       });
-  }, [neurosity]);
+
+      await neurosity.login({
+        email,
+        password,
+      });
+      
+      console.log("Successfully logged in to Neurosity");
+      setLogMessages(prev => [...prev, "Successfully logged in to Neurosity"]);
+      
+      return neurosity;
+    } catch (error) {
+      console.error("Error initializing:", error);
+      setLogMessages(prev => [...prev, `Error initializing: ${error.message}`]);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    initNeurosity().then(instance => {
+      if (instance) {
+        setNeurosity(instance);
+        // Start monitoring status after successful initialization
+        instance.status().subscribe(status => {
+          setDeviceStatus(status);
+          setLogMessages(prev => [...prev, "Status updated"]);
+        });
+      }
+    });
+
+    return () => {
+      if (neurosity) {
+        neurosity.disconnect();
+      }
+    };
+  }, []);
 
   return { neurosity, deviceStatus, signalQuality };
 }
